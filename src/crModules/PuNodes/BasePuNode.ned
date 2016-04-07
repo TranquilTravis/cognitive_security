@@ -6,6 +6,9 @@ import dos.core.*;
 simple puGSM extends PuNode like IPuNode
 {
     parameters:
+        double idleDuration = default(0.05);
+        double busyDuration = default(0.05);
+        
         @class(puGSM);
 }
 

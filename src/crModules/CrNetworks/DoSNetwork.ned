@@ -61,22 +61,22 @@ network test_DoS extends baseCrNetwork
         }
         CR7: BaseCrNode {
             @display("p=199,342;i=device/wifilaptop");
-            address = 6;
+            address = 7;
             neighbors = "1 2 3 4 5 6 8 9 10";
         }
         CR8: BaseCrNode {
             @display("p=454,137;i=device/wifilaptop");
-            address = 6;
+            address = 8;
             neighbors = "1 2 3 4 5 6 7 9 10";
         }
         CR9: BaseCrNode {
             @display("p=199,82;i=device/wifilaptop");
-            address = 6;
+            address = 9;
             neighbors = "1 2 3 4 5 6 7 8 10";
         }
         CR10: BaseCrNode {
             @display("p=296,235;i=device/wifilaptop");
-            address = 6;
+            address = 10;
             neighbors = "1 2 3 4 5 6 7 8 9";
         }
         //add_end

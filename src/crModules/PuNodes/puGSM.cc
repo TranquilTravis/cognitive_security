@@ -27,8 +27,8 @@ void puGSM::initialize()
         //idleDuration = exponential(.3);
         //busyDuration = 1 - idleDuration;
         puColor = "blue";
-        idleDuration = 0.60;
-        busyDuration = 0.40;
+        idleDuration = 0.060;
+        busyDuration = 0.040;
     LOG("Initialize");
 
     LOG("::: myChannel = "<<puChannel<< ", Arrival rate = "<<idleDuration<< ", busyDuration = "<<busyDuration);
@@ -110,7 +110,7 @@ void puGSM::setTimer()
 void puGSM::sendPUdata()
 {
     datatimer = new timerMsg("data");
-    scheduleAt(simTime()+ 0.1, datatimer);
+    scheduleAt(simTime()+ 0.01, datatimer);
 }
 
 void puGSM::broadcast(dataMsg *msg)

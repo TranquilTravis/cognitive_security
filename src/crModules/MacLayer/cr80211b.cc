@@ -78,7 +78,7 @@ void cr80211b::handleMessage(cMessage *msg)
                 }
                 else  // Attempt to start communication
                 {
-                    ev<<"I will send a AppRequest now.\n";
+                    ev<<"Node "<<myAddress<<": I will send a AppRequest to"<<recMsg->getDestination()<<" now.\n";
                     currentDestination = recMsg->getDestination();
                     numberOfPackets = par("totalFrames");
                     rtsAttempts = par("rtsAttempts");
@@ -243,6 +243,7 @@ void cr80211b::handleData(dataMsg *msg)
     emit(dataSignal, 1);
     if(ackEnabled == true && currentDataChannel != 0)
     {
+        ev<<"Node "<<myAddress<<": Handling DATA, and send ACK back to "<<recMsg->getSource()<<".\n";
         dataMsg *ack = new dataMsg("ACK");
         isReceiving = true;
         //ack->setBitLength(300);
@@ -274,7 +275,7 @@ void cr80211b::handleCTS(dataMsg *msg)
         sendData();
     }
     else{ // proposed channel is no longer free. Sense a new channel for sending
-        ev<<"Proposed channel is not free at transmitter anymore\n";
+        ev<<"Proposed channel is not free at transmitter anymore.\n";
         if (rtsTimer != NULL)
         {
             cancelAndDelete(rtsTimer); rtsTimer = NULL;
@@ -299,6 +300,7 @@ void cr80211b::handleAck()
         {  ev<<"MAC: Data channel is lost\n";  }
         else
         {
+            ev<<"Node "<<myAddress<<": Handling ACK, and send DATA to "<<currentDestination<<" again.\n";
             // if sense per packet is disabled, send next packet.. otherwise sense the data channel
             if (perPacketSensing == true)
             {
@@ -373,7 +375,7 @@ void cr80211b::handlePU()
         this->getParentModule()->setDisplayString("i=device/palm2,purple,40");
 //        this->getParentModule()->setDisplayString("i=device/palm2");
         rtsAttempts = par("rtsAttempts");
-        ev<<"I was transmitting, now handling PU start\n";
+        ev<<"Node "<<myAddress<<": I was transmitting, now handling PU start\n ";
         ev<<"rtsSent is "<<rtsSent<<"\n";
         if(rtsSent != true){
             if(drmEnabled == true)

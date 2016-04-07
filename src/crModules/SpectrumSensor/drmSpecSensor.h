@@ -17,10 +17,11 @@
 #include "ChTimer.h"
 
 class drmSpecSensor : public BaseSpecSensor{
-private:
+    private:
         int totalChannels;
         //int patternIndex;                       // Keeps a record of sensing pattern i.e. continuous, rendezvous, patterned!
         double sensingDuration;                 // How much time does sensing take per channel.
+        double tracktimer;
         int myAddress, sensedChannel, sensingIteration, currentDataChannel, proposedChannel, drmChannel;
         timerMsg *freeSenseTimer, *dataSenseTimer, *proposedSenseTimer, *drmSenseTimer;//, *publishTimer;
         simsignal_t sensingSignal;

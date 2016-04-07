@@ -21,7 +21,7 @@ void drmSpecSensor::handleMessage(cMessage *msg)
         delete msg;
         channelTimer = NULL;
         ev<<"SS: Update channle state.\n";
-        trackChannel(0.1);
+        trackChannel(tracktimer);
     }
     else if (msg == freeSenseTimer){
         delete msg; freeSenseTimer = NULL; senseChannel(SenseFreeCHANNEL);
@@ -50,6 +50,10 @@ void drmSpecSensor::handleMessage(cMessage *msg)
                 currentDataChannel = recMsg->getProposedChannel();
             }
             else if(recMsg->getKind() == CTS)
+            {
+                currentDataChannel = recMsg->getProposedChannel();
+            }
+            else if(recMsg->getKind() == ACK)
             {
                 currentDataChannel = recMsg->getProposedChannel();
             }
@@ -159,7 +163,7 @@ void drmSpecSensor::handleMessage(cMessage *msg)
 void drmSpecSensor::channelState(int chID, int chState)
 {
     channelsArray[chID-1].setState(chState);
-    ev<<"Set channel "<<chID<<" as "<<channelsArray[chID-1].getState()<<"\n";
+    ev<<"Node "<<myAddress<<": Set channel "<<chID<<" as "<<channelsArray[chID-1].getState()<<"\n";
 }
 void drmSpecSensor::senseChannel(int type)   // NEED TO TAKE CARE OF WHEN TO CANCEL THESE TIMERS IN CASE THE NODE BECOMES RECEIVER.
 {
@@ -294,6 +298,7 @@ void drmSpecSensor::init()
     totalChannels = getParentModule()->getParentModule()->par("totalChannels");
     drmChannel = 1;
     sensingDuration = par("sensingDuration");
+    tracktimer = par("tracktimer");
     myAddress = getParentModule()->par("address");
     freeSenseTimer = dataSenseTimer = proposedSenseTimer = NULL;//publishTimer = NULL;  // timers for sensing free or data channels.
     sensedChannel = sensingIteration = 0;
@@ -306,7 +311,7 @@ void drmSpecSensor::init()
     for (int x=0; x<totalChannels; x++){
         channelsArray[x].initialize();
     }
-    trackChannel(0.1);
+    trackChannel(tracktimer);
 }
 void drmSpecSensor::publishSensingResults()
 {
@@ -327,12 +332,13 @@ void drmSpecSensor::publishSensingResults()
 /////////////////////////////////////////////////////////////
 void drmSpecSensor::trackChannel(double startTime)
 {
+    ev<<"Node "<<myAddress<<": Reset State\n";
     for (int x=0; x<totalChannels; x++){
        channelsArray[x].resetCh();
     }
     if (channelTimer == NULL)
     {
        channelTimer = new timerMsg("ChannelTimer");  // Start a new session
-       scheduleAt((simTime()+uniform(startTime, startTime+0.1)), channelTimer);
+       scheduleAt((simTime()+uniform(startTime, startTime*1.5)), channelTimer);
     }
 }

@@ -60,10 +60,15 @@ void chTimer::resetRecord()
 
 void chTimer::resetCh()
 {
-    if (simTime() > lastRecord + 0.1) {
-        ev<<"State has been reset\n";
+    if (simTime() > lastRecord + 0.02) {
+        ev<<"State has been reset to 0\n";
+        ev<<"Last record time is "<<lastRecord<<"\n";
         state = 0;
         lastRecord = simTime();
+    }
+    else {
+        ev<<"State has not been reset to 0\n";
+        ev<<"Last record time is "<<lastRecord<<"\n";
     }
 }
 

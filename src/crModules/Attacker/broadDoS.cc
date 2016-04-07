@@ -38,8 +38,8 @@ void broadDoS::initialize()
         //idleDuration = exponential(.3);
         //busyDuration = 1 - idleDuration;
         Color = "red";
-        idleDuration = 0.10;
-        busyDuration = 0.90;
+        idleDuration = par("idle");
+        busyDuration = par("busy");
 
     LOG("Initialize: start time is "<<starttime);
 
@@ -116,24 +116,27 @@ void broadDoS::handleMessage(cMessage *msg)
 
 void broadDoS::setTimer(double start)
 {
-    cancelAndDelete(datatimer);
-    emit(attackStart, 1); // An attempt to start PU
-    apptimer = new timerMsg("timer");
-    scheduleAt(start + simTime()+ uniform(idleDuration*0.8,idleDuration*1.2), apptimer);
-//    updateGUI(simTime().dbl()+ idleDuration,Channel);
     if (simTime() > stoptime) {
+        LOG("Now, stop attack.");
         cancelAndDelete(apptimer);
         cancelAndDelete(datatimer);
         cancelAndDelete(eot);
         apptimer = datatimer = eot = NULL;
+    }
+    else {
+        cancelAndDelete(datatimer);
+        emit(attackStart, 1); // An attempt to start PU
+        apptimer = new timerMsg("timer");
+        scheduleAt(start + simTime()+ uniform(idleDuration*0.8,idleDuration*1.2), apptimer);
+    //    updateGUI(simTime().dbl()+ idleDuration,Channel);
     }
 }
 
 void broadDoS::sendAttack()
 {
     datatimer = new timerMsg("data");
-    LOG("Sending Attack Data at."<<simTime());
-    scheduleAt(simTime()+ 0.1, datatimer);
+    LOG("Sending Attack Data at "<<simTime());
+    scheduleAt(simTime()+ 0.01, datatimer);
 }
 
 void broadDoS::broadcast(dataMsg *msg)
